@@ -239,6 +239,25 @@ class ValidationTests(TestCase):
         self.assertEquals(serializer.is_valid(), True)
         self.assertEquals(serializer.errors, {})
 
+    def test_bad_type_data_is_false(self):
+        """
+        Data of the wrong type is not valid.
+        """
+        data = ['i am', 'a', 'list']
+        serializer = CommentSerializer(self.comment, data=data)
+        self.assertEquals(serializer.is_valid(), False)
+        self.assertEquals(serializer.errors, {'non_field_errors': [u'Invalid data']})
+
+        data = 'and i am a string'
+        serializer = CommentSerializer(self.comment, data=data)
+        self.assertEquals(serializer.is_valid(), False)
+        self.assertEquals(serializer.errors, {'non_field_errors': [u'Invalid data']})
+
+        data = 42
+        serializer = CommentSerializer(self.comment, data=data)
+        self.assertEquals(serializer.is_valid(), False)
+        self.assertEquals(serializer.errors, {'non_field_errors': [u'Invalid data']})
+
 
 class MetadataTests(TestCase):
     def test_empty(self):
